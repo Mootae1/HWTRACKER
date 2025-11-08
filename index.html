@@ -42,13 +42,12 @@
   .container {
     width: 95%;
     max-width: 900px;
-    margin-top: 50px;
+    margin-top: 40px;
     text-align: center;
     animation: fadeIn 1s ease forwards;
     position: relative;
   }
 
-  /* ปุ่มสลับธีม */
   .theme-toggle {
     position: absolute;
     top: -10px;
@@ -65,7 +64,6 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    transition: all 0.3s;
   }
 
   .theme-toggle:hover {
@@ -74,93 +72,76 @@
   }
 
   h1 {
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     color: var(--accent);
     font-weight: 700;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 
   p.subtitle {
     color: #94a3b8;
-    margin-bottom: 30px;
-    letter-spacing: 0.3px;
+    margin-bottom: 25px;
   }
 
   .stats-box {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 30px;
+    gap: 10px;
+    margin-bottom: 25px;
   }
 
   .card {
     background: var(--card-bg);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 20px;
-    min-width: 180px;
+    border-radius: 16px;
+    padding: 18px;
+    min-width: 160px;
     color: var(--text);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     animation: floatUp 1.5s ease;
   }
 
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px var(--accent);
-  }
-
-  .card h2 {
-    font-size: 1.4rem;
-    margin-bottom: 5px;
-  }
-
-  .card span {
-    font-size: 0.9rem;
-    color: #a5b4fc;
-  }
+  .card h2 { font-size: 1.3rem; margin-bottom: 5px; }
+  .card span { font-size: 0.85rem; color: #a5b4fc; }
 
   form {
     background: var(--card-bg);
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-bottom: 20px;
-    animation: fadeIn 1s ease;
   }
 
-  input, button {
+  input, select, button {
     padding: 12px;
     border-radius: 10px;
     border: none;
     font-size: 15px;
   }
 
-  input {
+  input, select {
     background: rgba(255,255,255,0.1);
     color: var(--text);
     outline: none;
   }
 
-  input::placeholder {
-    color: #94a3b8;
-  }
+  option { color: black; }
+  input::placeholder { color: #94a3b8; }
 
   button {
     background: var(--button-bg);
     color: white;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
     box-shadow: 0 0 10px rgba(124,58,237,0.4);
   }
 
   button:hover {
+    transform: scale(1.03);
     box-shadow: 0 0 20px rgba(124,58,237,0.8);
-    transform: scale(1.02);
   }
 
   .filter {
@@ -171,72 +152,45 @@
     margin-bottom: 20px;
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
+  ul { list-style: none; padding: 0; }
   li {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
+    border-radius: 14px;
     padding: 16px;
     margin-bottom: 12px;
     text-align: left;
     display: flex;
     flex-direction: column;
     gap: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     animation: fadeIn 0.6s ease;
   }
 
-  .subject { font-weight: 600; font-size: 1.05rem; }
-  .deadline { color: #cbd5e1; font-size: 0.9rem; }
-  .countdown { font-weight: 600; font-size: 0.9rem; }
-
+  .subject { font-weight: 600; font-size: 1rem; }
+  .deadline { color: #cbd5e1; font-size: 0.85rem; }
+  .countdown { font-weight: 600; font-size: 0.85rem; }
   .status-green { color: #22c55e; }
   .status-yellow { color: #eab308; }
   .status-red { color: #ef4444; }
 
-  .actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 5px;
-  }
-
+  .actions { display: flex; gap: 10px; margin-top: 5px; }
   .done-btn, .delete-btn {
     flex: 1;
     padding: 8px 12px;
-    border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     color: white;
     font-weight: 600;
   }
-
   .done-btn { background: #10b981; }
   .delete-btn { background: #ef4444; }
+  .done-btn:hover { box-shadow: 0 0 12px #10b981aa; }
+  .delete-btn:hover { box-shadow: 0 0 12px #ef4444aa; }
 
-  .done-btn:hover { box-shadow: 0 0 12px #10b981aa; transform: scale(1.03); }
-  .delete-btn:hover { box-shadow: 0 0 12px #ef4444aa; transform: scale(1.03); }
+  .empty { color: #94a3b8; text-align: center; margin-top: 25px; }
 
-  .empty {
-    color: #94a3b8;
-    text-align: center;
-    margin-top: 30px;
-    animation: fadeIn 1s ease;
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes floatUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+  @keyframes floatUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
 </style>
 </head>
 <body>
@@ -247,31 +201,37 @@
   <p class="subtitle">Stay organized, stay focused</p>
 
   <div class="stats-box">
-    <div class="card">
-      <h2 id="time">00:00:00</h2>
-      <span>Current Time</span>
-    </div>
-    <div class="card">
-      <h2 id="date">-</h2>
-      <span>Date</span>
-    </div>
-    <div class="card">
-      <h2 id="total">0</h2>
-      <span>Total Tasks</span>
-    </div>
-    <div class="card">
-      <h2 id="completed">0</h2>
-      <span>Completed</span>
-    </div>
-    <div class="card">
-      <h2 id="pending">0</h2>
-      <span>Pending</span>
-    </div>
+    <div class="card"><h2 id="time">00:00:00</h2><span>Current Time</span></div>
+    <div class="card"><h2 id="date">-</h2><span>Date</span></div>
+    <div class="card"><h2 id="total">0</h2><span>Total</span></div>
+    <div class="card"><h2 id="completed">0</h2><span>Completed</span></div>
+    <div class="card"><h2 id="pending">0</h2><span>Pending</span></div>
   </div>
 
   <form id="taskForm">
     <input type="text" id="taskName" placeholder="ชื่องาน" required>
-    <input type="text" id="subject" placeholder="วิชา" required>
+    <select id="subject" required>
+      <option value="">เลือกวิชา</option>
+      <option>คณิตเพิ่มเติม</option>
+      <option>คณิตพื้นฐาน</option>
+      <option>สังคม</option>
+      <option>ชีวะ(ธนาวุต)</option>
+      <option>ชีวะ(ขนิษฐา)</option>
+      <option>ฟิสิกส์</option>
+      <option>คอมพิวเตอร์</option>
+      <option>เคมี</option>
+      <option>อังกฤษ(Elvin)</option>
+      <option>อังกฤษ(ประธาน)</option>
+      <option>อังกฤษ(อำนาจ)</option>
+      <option>วิศวะ</option>
+      <option>แพทย์</option>
+      <option>เภสัช</option>
+      <option>สถาปัตย์</option>
+      <option>ภาษาไทย</option>
+      <option>IS</option>
+      <option>ประวัติศาสตร์</option>
+      <option>สุขศึกษา</option>
+    </select>
     <input type="datetime-local" id="deadline" required>
     <button type="submit">เพิ่มงาน</button>
   </form>
@@ -282,93 +242,69 @@
 </div>
 
 <script>
-function load() {
-  return JSON.parse(localStorage.getItem('tasks')||'[]');
+function load(){return JSON.parse(localStorage.getItem('tasks')||'[]');}
+function save(t){localStorage.setItem('tasks',JSON.stringify(t));}
+function updateStats(t){
+ document.getElementById('total').textContent=t.length;
+ document.getElementById('completed').textContent=t.filter(x=>x.done).length;
+ document.getElementById('pending').textContent=t.filter(x=>!x.done).length;
 }
-function save(tasks) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+function render(){
+ const t=load();
+ const l=document.getElementById('taskList');
+ const f=document.getElementById('filter').value.toLowerCase();
+ l.innerHTML=''; let shown=0;
+ t.sort((a,b)=>new Date(a.deadline)-new Date(b.deadline));
+ t.forEach((task,i)=>{
+  if(f && !task.subject.toLowerCase().includes(f)) return;
+  if(task.done) return;
+  const diff=new Date(task.deadline)-new Date();
+  let scls=diff<=0?'status-red':diff<=172800000?'status-yellow':'status-green';
+  const days=Math.floor(diff/(1000*60*60*24));
+  const hrs=Math.floor(diff/(1000*60*60)%24);
+  const min=Math.floor(diff/(1000*60)%60);
+  const li=document.createElement('li');
+  li.innerHTML=`<div class='subject'>${task.name} (${task.subject})</div>
+  <div class='deadline'>กำหนดส่ง: ${new Date(task.deadline).toLocaleString()}</div>
+  <div class='countdown ${scls}'>เหลืออีก: ${days} วัน ${hrs} ชม. ${min} นาที</div>
+  <div class='actions'>
+  <button class='done-btn'>ส่งแล้ว</button>
+  <button class='delete-btn'>ลบ</button>
+  </div>`;
+  li.querySelector('.done-btn').onclick=()=>{task.done=true;save(t);render();};
+  li.querySelector('.delete-btn').onclick=()=>{t.splice(i,1);save(t);render();};
+  l.appendChild(li); shown++;
+ });
+ document.getElementById('emptyMsg').style.display=shown?'none':'block';
+ updateStats(t);
 }
-function updateStats(tasks) {
-  document.getElementById('total').textContent = tasks.length;
-  document.getElementById('completed').textContent = tasks.filter(t=>t.done).length;
-  document.getElementById('pending').textContent = tasks.filter(t=>!t.done).length;
-}
-function render() {
-  const tasks = load();
-  const list = document.getElementById('taskList');
-  const filter = document.getElementById('filter').value.toLowerCase();
-  list.innerHTML = '';
-  let shown = 0;
 
-  tasks.sort((a,b)=> new Date(a.deadline)-new Date(b.deadline));
-
-  tasks.forEach((task, index)=>{
-    if (filter && !task.subject.toLowerCase().includes(filter)) return;
-    if (task.done) return;
-    const diff = new Date(task.deadline) - new Date();
-    let statusClass;
-    if (diff <= 0) statusClass = 'status-red';
-    else if (diff <= 172800000) statusClass = 'status-yellow';
-    else statusClass = 'status-green';
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor(diff / (1000*60*60)%24);
-    const minutes = Math.floor(diff / (1000*60)%60);
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div class='subject'>${task.name} (${task.subject})</div>
-      <div class='deadline'>กำหนดส่ง: ${new Date(task.deadline).toLocaleString()}</div>
-      <div class='countdown ${statusClass}'>เหลืออีก: ${days} วัน ${hours} ชม. ${minutes} นาที</div>
-      <div class='actions'>
-        <button class='done-btn'>ส่งแล้ว</button>
-        <button class='delete-btn'>ลบ</button>
-      </div>`;
-    li.querySelector('.done-btn').onclick = ()=>{
-      task.done = true; save(tasks); render();
-    };
-    li.querySelector('.delete-btn').onclick = ()=>{
-      tasks.splice(index,1); save(tasks); render();
-    };
-    list.appendChild(li);
-    shown++;
-  });
-  document.getElementById('emptyMsg').style.display = shown ? 'none' : 'block';
-  updateStats(tasks);
-}
-document.getElementById('taskForm').onsubmit = e=>{
-  e.preventDefault();
-  const tasks = load();
-  tasks.push({ name:taskName.value, subject:subject.value, deadline:deadline.value, done:false});
-  save(tasks);
-  render();
-  e.target.reset();
+// submit
+const form=document.getElementById('taskForm');
+form.onsubmit=e=>{
+ e.preventDefault();
+ const t=load();
+ t.push({name:taskName.value,subject:subject.value,deadline:deadline.value,done:false});
+ save(t); render(); e.target.reset();
 };
-document.getElementById('filter').oninput = render;
+document.getElementById('filter').oninput=render;
 
 setInterval(()=>{
-  const now = new Date();
-  document.getElementById('time').textContent = now.toLocaleTimeString('th-TH');
-  document.getElementById('date').textContent = now.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric'});
-}, 1000);
-
-setInterval(render, 60000);
+ const n=new Date();
+ document.getElementById('time').textContent=n.toLocaleTimeString('th-TH');
+ document.getElementById('date').textContent=n.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});
+},1000);
+setInterval(render,60000);
 render();
 
-/* ============ Theme Toggle ============ */
-const toggleBtn = document.getElementById('themeToggle');
-const body = document.body;
-
-// โหลดค่าธีมที่เคยเลือกไว้
-if(localStorage.getItem('theme') === 'light'){
-  body.classList.add('light');
-  toggleBtn.textContent = '☀️';
-}
-
-toggleBtn.onclick = ()=>{
-  body.classList.toggle('light');
-  const isLight = body.classList.contains('light');
-  toggleBtn.textContent = isLight ? '☀️' : '🌙';
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+// theme toggle
+const btn=document.getElementById('themeToggle');
+if(localStorage.getItem('theme')==='light'){document.body.classList.add('light');btn.textContent='☀️';}
+btn.onclick=()=>{
+ document.body.classList.toggle('light');
+ const light=document.body.classList.contains('light');
+ btn.textContent=light?'☀️':'🌙';
+ localStorage.setItem('theme',light?'light':'dark');
 };
 </script>
 </body>
