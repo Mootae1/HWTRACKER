@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Homework Tracker</title>
+<style>
+ body { font-family: 'Inter', sans-serif; background:#f7f7fb; margin:0; padding:0; display:flex; justify-content:center; }
+ .container { width: 90%; max-width: 650px; margin-top: 40px; }
+ h1 { text-align: center; margin-bottom: 20px; }
+ form { background:white; padding:20px; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,.06); display:flex; flex-direction:column; gap:12px; }
+ input { padding:10px; border:1px solid #ddd; border-radius:8px; font-size:14px; }
+ button { padding:10px; border-radius:8px; border:none; cursor:pointer; background:#6366f1; color:white; font-weight:600; }
+ ul { list-style:none; padding:0; margin-top:20px; }
+ li { background:white; padding:16px; border-radius:14px; box-shadow:0 3px 8px rgba(0,0,0,.05); margin-bottom:14px; display:flex; flex-direction:column; gap:6px; }
+ .subject { font-weight:600; }
+ .deadline { font-size:14px; color:#777; }
+ .countdown { font-weight:600; }
+ .status-green { color:#16a34a; }
+ .status-yellow { color:#ca8a04; }
+ .status-red { color:#dc2626; }
+ .done-btn, .delete-btn { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; font-size:13px; }
+ .done-btn { background:#10b981; color:white; }
+ .delete-btn { background:#ef4444; color:white; }
+ .filter { margin-top:10px; padding:8px; border:1px solid #ccc; border-radius:8px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Homework Tracker</h1>
+<form id="taskForm">
+ <input type="text" id="taskName" placeholder="ชื่องาน" required>
+ <input type="text" id="subject" placeholder="วิชา" required>
+ <input type="datetime-local" id="deadline" required>
+ <button type="submit">บันทึก</button>
+</form>
+<input id="filter" class="filter" placeholder="ค้นหาตามวิชา">
+<ul id="taskList"></ul>
+<h2>งานที่ส่งแล้ว</h2>
+<ul id="doneList"></ul>
+</div>
+<script>
+function load() {
+ return JSON.parse(localStorage.getItem('tasks')||'[]');
+}
+function save(tasks) {
+ localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+function render() {
+ const tasks = load();
+ const list = document.getElementById('taskList');
+ const doneList = document.getElementById('doneList');
+ const filter = document.getElementById('filter').value.toLowerCase();
+ list.innerHTML = '';
+ doneList.innerHTML = '';
+ tasks.sort((a,b)=> new Date(a.deadline)-new Date(b.deadline));
+ tasks.forEach((task, index)=>{
+ const diff = new Date(task.deadline) - new Date();
+ let statusClass;
+ if (diff <= 0) statusClass = 'status-red';
+ else if (diff <= 172800000) statusClass = 'status-yellow';
+ else statusClass = 'status-green';
+ const days = Math.floor(diff / (1000*60*60*24));
+ const hours = Math.floor(diff / (1000*60*60)%24);
+ const minutes = Math.floor(diff / (1000*60)%60);
+ const li = document.createElement('li');
+ if (task.done) {
+ li.innerHTML = `<div class='subject'>${task.name} (${task.subject})</div>`;
+ doneList.appendChild(li);
+ return;
+ }
+ if (filter && !task.subject.toLowerCase().includes(filter)) return;
+ li.innerHTML = `
+ <div class='subject'>${task.name} (${task.subject})</div>
+ <div class='deadline'>กำหนดส่ง: ${new Date(task.deadline).toLocaleString()}</div>
+ <div class='countdown ${statusClass}'>เหลืออีก: ${days} วัน ${hours} ชม. ${minutes} นาที</div>
+ <button class='done-btn'>ส่งแล้ว</button>
+ <button class='delete-btn'>ลบ</button>`;
+ li.querySelector('.done-btn').onclick = ()=>{
+ task.done = true;
+ save(tasks);
+ render();
+ };
+ li.querySelector('.delete-btn').onclick = ()=>{
+ tasks.splice(index,1);
+ save(tasks);
+ render();
+ };
+ list.appendChild(li);
+ });
+}
+document.getElementById('taskForm').onsubmit = e=>{
+ e.preventDefault();
+ const tasks = load();
+ tasks.push({ name:taskName.value, subject:subject.value, deadline:deadline.value, done:false});
+ save(tasks);
+ render();
+ e.target.reset();
+};
+document.getElementById('filter').oninput = render;
+setInterval(render, 60000);
+render();
+</script>
+</body>
+</html>
