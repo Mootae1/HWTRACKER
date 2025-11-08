@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homework Tracker</title>
+<style>
+  * { box-sizing: border-box; font-family: "Inter", sans-serif; transition: all 0.25s ease; }
+  :root {
+    --bg: radial-gradient(circle at top left, #0f172a, #020617);
+    --card-bg: rgba(255,255,255,0.08);
+    --text: #e2e8f0;
+    --accent: #7c3aed;
+    --button-bg: linear-gradient(90deg, #7c3aed, #6366f1);
+  }
+  body.light {
+    --bg: linear-gradient(180deg, #f9fafb, #e5e7eb);
+    --card-bg: rgba(255,255,255,1);
+    --text: #111827;
+    --accent: #4338ca;
+    --button-bg: linear-gradient(90deg, #4f46e5, #6366f1);
+  }
+  body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--text);
+    display: flex; justify-content: center; align-items: flex-start;
+    min-height: 100vh;
+  }
+  .container {
+    width: 95%; max-width: 900px;
+    margin-top: 40px; text-align: center;
+    animation: fadeIn 1s ease forwards; position: relative;
+  }
+  .theme-toggle {
+    position: absolute; top: -10px; right: 0;
+    background: var(--card-bg); border: none; border-radius: 50%;
+    width: 44px; height: 44px; cursor: pointer; font-size: 20px;
+    color: var(--text); display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
+  h1 { font-size: 2.3rem; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  p.subtitle { color: #94a3b8; margin-bottom: 25px; }
+  form {
+    background: var(--card-bg); border-radius: 16px;
+    padding: 20px; display: flex; flex-direction: column; gap: 12px;
+    margin-bottom: 20px;
+  }
+  input, select, textarea, button {
+    padding: 12px; border-radius: 10px; border: none; font-size: 15px;
+  }
+  input, select, textarea {
+    background: rgba(255,255,255,0.12); color: var(--text); outline: none;
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  input::placeholder, textarea::placeholder { color: #9ca3af; }
+  button {
+    background: var(--button-bg); color: white; font-weight: 600; cursor: pointer;
+  }
+  .filter {
+    width: 100%; background: rgba(255,255,255,0.12); border-radius: 10px;
+    color: var(--text); margin-bottom: 20px;
+  }
+  ul { list-style: none; padding: 0; }
+  li {
+    background: var(--card-bg); border-radius: 14px;
+    padding: 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .subject { font-weight: 600; font-size: 1rem; }
+  .details, .link { font-size: 0.9rem; }
+  .link a { color: var(--accent); text-decoration: underline; word-break: break-word; }
+  .deadline { font-size: 0.85rem; }
+  .countdown { font-weight: 600; font-size: 0.85rem; }
+  .status-green { color: #22c55e; }
+  .status-yellow { color: #eab308; }
+  .status-red { color: #ef4444; }
+  .empty { color: #94a3b8; text-align: center; margin-top: 25px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <button class="theme-toggle" id="themeToggle">🌙</button>
+  <h1>Homework Tracker</h1>
+  <p class="subtitle">Stay organized, stay focused</p>
+
+  <form id="taskForm">
+    <input type="text" id="taskName" placeholder="ชื่องาน" required>
+    <select id="subject" required>
+      <option value="">เลือกวิชา</option>
+      <option>คณิตเพิ่มเติม</option><option>คณิตพื้นฐาน</option>
+      <option>สังคม</option><option>ชีวะ(ธนาวุต)</option><option>ชีวะ(ขนิษฐา)</option>
+      <option>ฟิสิกส์</option><option>คอมพิวเตอร์</option><option>เคมี</option>
+      <option>อังกฤษ(Elvin)</option><option>อังกฤษ(ประธาน)</option><option>อังกฤษ(อำนาจ)</option>
+      <option>วิศวะ</option><option>แพทย์</option><option>เภสัช</option>
+      <option>สถาปัตย์</option><option>ภาษาไทย</option><option>IS</option><option>ประวัติศาสตร์</option><option>สุขศึกษา</option>
+    </select>
+    <textarea id="details" placeholder="รายละเอียดของงาน (เช่น หน้า 25–30 หรือหัวข้อที่ต้องทำ)"></textarea>
+    <input type="url" id="link" placeholder="แนบลิงก์งาน (เช่น Google Docs หรือ Classroom)">
+    <input type="datetime-local" id="deadline" required>
+    <button type="submit">เพิ่มงาน</button>
+  </form>
+
+  <input id="filter" class="filter" placeholder="ค้นหาตามวิชา...">
+  <ul id="taskList"></ul>
+  <p class="empty" id="emptyMsg">ไม่มีงานที่ต้องทำ 🎉</p>
+</div>
+
+<script>
+// === ตั้งค่า ===
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz3BjPHQAV7D5BfVkcq3JX3vKDim2KGiLVR_sETPhtuNs38M_G5A0mD6zn3gjo1cRzU/exec";
+const SECRET_KEY = "MEI"; // 👈 ใส่ key ของคุณที่นี่
+
+// === โหลดข้อมูลจาก Google Sheet ===
+async function loadTasks() {
+  const res = await fetch(SCRIPT_URL);
+  const tasks = await res.json();
+  return tasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+}
+
+// === เพิ่มงานใหม่ (เฉพาะเจ้าของ) ===
+async function addTask(task) {
+  await fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({ ...task, key: SECRET_KEY }),
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+// === แสดงผล ===
+async function render() {
+  const list = document.getElementById('taskList');
+  const filter = document.getElementById('filter').value.toLowerCase();
+  list.innerHTML = '';
+  const tasks = await loadTasks();
+  let shown = 0;
+
+  tasks.forEach(task => {
+    if (filter && !task.subject.toLowerCase().includes(filter)) return;
+    if (task.done === "TRUE") return;
+    const diff = new Date(task.deadline) - new Date();
+    const scls = diff <= 0 ? 'status-red' : diff <= 172800000 ? 'status-yellow' : 'status-green';
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hrs = Math.floor((diff / (1000*60*60)) % 24);
+    const min = Math.floor((diff / (1000*60)) % 60);
+
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class='subject'>${task.name} (${task.subject})</div>
+      ${task.details ? `<div class='details'>📘 ${task.details}</div>` : ''}
+      ${task.link ? `<div class='link'>🔗 <a href='${task.link}' target='_blank'>${task.link}</a></div>` : ''}
+      <div class='deadline'>กำหนดส่ง: ${new Date(task.deadline).toLocaleString()}</div>
+      <div class='countdown ${scls}'>เหลืออีก: ${days} วัน ${hrs} ชม. ${min} นาที</div>
+    `;
+    list.appendChild(li);
+    shown++;
+  });
+
+  document.getElementById('emptyMsg').style.display = shown ? 'none' : 'block';
+}
+
+// === เพิ่มงานผ่านฟอร์ม ===
+document.getElementById('taskForm').onsubmit = async e => {
+  e.preventDefault();
+  const t = {
+    name: taskName.value,
+    subject: subject.value,
+    details: details.value,
+    link: link.value,
+    deadline: deadline.value,
+    done: false
+  };
+  await addTask(t);
+  e.target.reset();
+  alert("✅ เพิ่มงานเรียบร้อย!");
+  render();
+};
+
+// === ฟิลเตอร์ค้นหา ===
+document.getElementById('filter').oninput = render;
+
+// === ธีม ===
+const btn = document.getElementById('themeToggle');
+if (localStorage.getItem('theme') === 'light') {
+  document.body.classList.add('light');
+  btn.textContent = '☀️';
+}
+btn.onclick = () => {
+  document.body.classList.toggle('light');
+  const light = document.body.classList.contains('light');
+  btn.textContent = light ? '☀️' : '🌙';
+  localStorage.setItem('theme', light ? 'light' : 'dark');
+};
+
+// === เริ่ม ===
+render();
+setInterval(render, 60000);
+</script>
+</body>
+</html>
