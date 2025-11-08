@@ -1,104 +1,375 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Homework Tracker</title>
 <style>
- body { font-family: 'Inter', sans-serif; background:#f7f7fb; margin:0; padding:0; display:flex; justify-content:center; }
- .container { width: 90%; max-width: 650px; margin-top: 40px; }
- h1 { text-align: center; margin-bottom: 20px; }
- form { background:white; padding:20px; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,.06); display:flex; flex-direction:column; gap:12px; }
- input { padding:10px; border:1px solid #ddd; border-radius:8px; font-size:14px; }
- button { padding:10px; border-radius:8px; border:none; cursor:pointer; background:#6366f1; color:white; font-weight:600; }
- ul { list-style:none; padding:0; margin-top:20px; }
- li { background:white; padding:16px; border-radius:14px; box-shadow:0 3px 8px rgba(0,0,0,.05); margin-bottom:14px; display:flex; flex-direction:column; gap:6px; }
- .subject { font-weight:600; }
- .deadline { font-size:14px; color:#777; }
- .countdown { font-weight:600; }
- .status-green { color:#16a34a; }
- .status-yellow { color:#ca8a04; }
- .status-red { color:#dc2626; }
- .done-btn, .delete-btn { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; font-size:13px; }
- .done-btn { background:#10b981; color:white; }
- .delete-btn { background:#ef4444; color:white; }
- .filter { margin-top:10px; padding:8px; border:1px solid #ccc; border-radius:8px; }
+  * {
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    transition: all 0.25s ease;
+  }
+
+  :root {
+    --bg: radial-gradient(circle at top left, #0f172a, #020617);
+    --card-bg: rgba(255,255,255,0.08);
+    --text: #e2e8f0;
+    --accent: #7c3aed;
+    --button-bg: linear-gradient(90deg, #7c3aed, #6366f1);
+  }
+
+  body.light {
+    --bg: linear-gradient(180deg, #f9fafb, #e5e7eb);
+    --card-bg: rgba(255,255,255,0.9);
+    --text: #1e293b;
+    --accent: #4f46e5;
+    --button-bg: linear-gradient(90deg, #6366f1, #4f46e5);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: 95%;
+    max-width: 900px;
+    margin-top: 50px;
+    text-align: center;
+    animation: fadeIn 1s ease forwards;
+    position: relative;
+  }
+
+  /* ปุ่มสลับธีม */
+  .theme-toggle {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    background: var(--card-bg);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    transition: all 0.3s;
+  }
+
+  .theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--accent);
+  }
+
+  h1 {
+    font-size: 2.6rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  p.subtitle {
+    color: #94a3b8;
+    margin-bottom: 30px;
+    letter-spacing: 0.3px;
+  }
+
+  .stats-box {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 180px;
+    color: var(--text);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transform: translateY(0);
+    animation: floatUp 1.5s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  .card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+  }
+
+  .card span {
+    font-size: 0.9rem;
+    color: #a5b4fc;
+  }
+
+  form {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease;
+  }
+
+  input, button {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+  }
+
+  input {
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+    outline: none;
+  }
+
+  input::placeholder {
+    color: #94a3b8;
+  }
+
+  button {
+    background: var(--button-bg);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(124,58,237,0.4);
+  }
+
+  button:hover {
+    box-shadow: 0 0 20px rgba(124,58,237,0.8);
+    transform: scale(1.02);
+  }
+
+  .filter {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    animation: fadeIn 0.6s ease;
+  }
+
+  .subject { font-weight: 600; font-size: 1.05rem; }
+  .deadline { color: #cbd5e1; font-size: 0.9rem; }
+  .countdown { font-weight: 600; font-size: 0.9rem; }
+
+  .status-green { color: #22c55e; }
+  .status-yellow { color: #eab308; }
+  .status-red { color: #ef4444; }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+  }
+
+  .done-btn, .delete-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+  }
+
+  .done-btn { background: #10b981; }
+  .delete-btn { background: #ef4444; }
+
+  .done-btn:hover { box-shadow: 0 0 12px #10b981aa; transform: scale(1.03); }
+  .delete-btn:hover { box-shadow: 0 0 12px #ef4444aa; transform: scale(1.03); }
+
+  .empty {
+    color: #94a3b8;
+    text-align: center;
+    margin-top: 30px;
+    animation: fadeIn 1s ease;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes floatUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
 <div class="container">
-<h1>Homework Tracker</h1>
-<form id="taskForm">
- <input type="text" id="taskName" placeholder="ชื่องาน" required>
- <input type="text" id="subject" placeholder="วิชา" required>
- <input type="datetime-local" id="deadline" required>
- <button type="submit">บันทึก</button>
-</form>
-<input id="filter" class="filter" placeholder="ค้นหาตามวิชา">
-<ul id="taskList"></ul>
-<h2>งานที่ส่งแล้ว</h2>
-<ul id="doneList"></ul>
+  <button class="theme-toggle" id="themeToggle" title="เปลี่ยนโหมด">🌙</button>
+
+  <h1>Homework Tracker</h1>
+  <p class="subtitle">Stay organized, stay focused</p>
+
+  <div class="stats-box">
+    <div class="card">
+      <h2 id="time">00:00:00</h2>
+      <span>Current Time</span>
+    </div>
+    <div class="card">
+      <h2 id="date">-</h2>
+      <span>Date</span>
+    </div>
+    <div class="card">
+      <h2 id="total">0</h2>
+      <span>Total Tasks</span>
+    </div>
+    <div class="card">
+      <h2 id="completed">0</h2>
+      <span>Completed</span>
+    </div>
+    <div class="card">
+      <h2 id="pending">0</h2>
+      <span>Pending</span>
+    </div>
+  </div>
+
+  <form id="taskForm">
+    <input type="text" id="taskName" placeholder="ชื่องาน" required>
+    <input type="text" id="subject" placeholder="วิชา" required>
+    <input type="datetime-local" id="deadline" required>
+    <button type="submit">เพิ่มงาน</button>
+  </form>
+
+  <input id="filter" class="filter" placeholder="ค้นหาตามวิชา...">
+  <ul id="taskList"></ul>
+  <p class="empty" id="emptyMsg">ไม่มีงานที่ต้องทำ 🎉</p>
 </div>
+
 <script>
 function load() {
- return JSON.parse(localStorage.getItem('tasks')||'[]');
+  return JSON.parse(localStorage.getItem('tasks')||'[]');
 }
 function save(tasks) {
- localStorage.setItem('tasks', JSON.stringify(tasks));
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+function updateStats(tasks) {
+  document.getElementById('total').textContent = tasks.length;
+  document.getElementById('completed').textContent = tasks.filter(t=>t.done).length;
+  document.getElementById('pending').textContent = tasks.filter(t=>!t.done).length;
 }
 function render() {
- const tasks = load();
- const list = document.getElementById('taskList');
- const doneList = document.getElementById('doneList');
- const filter = document.getElementById('filter').value.toLowerCase();
- list.innerHTML = '';
- doneList.innerHTML = '';
- tasks.sort((a,b)=> new Date(a.deadline)-new Date(b.deadline));
- tasks.forEach((task, index)=>{
- const diff = new Date(task.deadline) - new Date();
- let statusClass;
- if (diff <= 0) statusClass = 'status-red';
- else if (diff <= 172800000) statusClass = 'status-yellow';
- else statusClass = 'status-green';
- const days = Math.floor(diff / (1000*60*60*24));
- const hours = Math.floor(diff / (1000*60*60)%24);
- const minutes = Math.floor(diff / (1000*60)%60);
- const li = document.createElement('li');
- if (task.done) {
- li.innerHTML = `<div class='subject'>${task.name} (${task.subject})</div>`;
- doneList.appendChild(li);
- return;
- }
- if (filter && !task.subject.toLowerCase().includes(filter)) return;
- li.innerHTML = `
- <div class='subject'>${task.name} (${task.subject})</div>
- <div class='deadline'>กำหนดส่ง: ${new Date(task.deadline).toLocaleString()}</div>
- <div class='countdown ${statusClass}'>เหลืออีก: ${days} วัน ${hours} ชม. ${minutes} นาที</div>
- <button class='done-btn'>ส่งแล้ว</button>
- <button class='delete-btn'>ลบ</button>`;
- li.querySelector('.done-btn').onclick = ()=>{
- task.done = true;
- save(tasks);
- render();
- };
- li.querySelector('.delete-btn').onclick = ()=>{
- tasks.splice(index,1);
- save(tasks);
- render();
- };
- list.appendChild(li);
- });
+  const tasks = load();
+  const list = document.getElementById('taskList');
+  const filter = document.getElementById('filter').value.toLowerCase();
+  list.innerHTML = '';
+  let shown = 0;
+
+  tasks.sort((a,b)=> new Date(a.deadline)-new Date(b.deadline));
+
+  tasks.forEach((task, index)=>{
+    if (filter && !task.subject.toLowerCase().includes(filter)) return;
+    if (task.done) return;
+    const diff = new Date(task.deadline) - new Date();
+    let statusClass;
+    if (diff <= 0) statusClass = 'status-red';
+    else if (diff <= 172800000) statusClass = 'status-yellow';
+    else statusClass = 'status-green';
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor(diff / (1000*60*60)%24);
+    const minutes = Math.floor(diff / (1000*60)%60);
+
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class='subject'>${task.name} (${task.subject})</div>
+      <div class='deadline'>กำหนดส่ง: ${new Date(task.deadline).toLocaleString()}</div>
+      <div class='countdown ${statusClass}'>เหลืออีก: ${days} วัน ${hours} ชม. ${minutes} นาที</div>
+      <div class='actions'>
+        <button class='done-btn'>ส่งแล้ว</button>
+        <button class='delete-btn'>ลบ</button>
+      </div>`;
+    li.querySelector('.done-btn').onclick = ()=>{
+      task.done = true; save(tasks); render();
+    };
+    li.querySelector('.delete-btn').onclick = ()=>{
+      tasks.splice(index,1); save(tasks); render();
+    };
+    list.appendChild(li);
+    shown++;
+  });
+  document.getElementById('emptyMsg').style.display = shown ? 'none' : 'block';
+  updateStats(tasks);
 }
 document.getElementById('taskForm').onsubmit = e=>{
- e.preventDefault();
- const tasks = load();
- tasks.push({ name:taskName.value, subject:subject.value, deadline:deadline.value, done:false});
- save(tasks);
- render();
- e.target.reset();
+  e.preventDefault();
+  const tasks = load();
+  tasks.push({ name:taskName.value, subject:subject.value, deadline:deadline.value, done:false});
+  save(tasks);
+  render();
+  e.target.reset();
 };
 document.getElementById('filter').oninput = render;
+
+setInterval(()=>{
+  const now = new Date();
+  document.getElementById('time').textContent = now.toLocaleTimeString('th-TH');
+  document.getElementById('date').textContent = now.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric'});
+}, 1000);
+
 setInterval(render, 60000);
 render();
+
+/* ============ Theme Toggle ============ */
+const toggleBtn = document.getElementById('themeToggle');
+const body = document.body;
+
+// โหลดค่าธีมที่เคยเลือกไว้
+if(localStorage.getItem('theme') === 'light'){
+  body.classList.add('light');
+  toggleBtn.textContent = '☀️';
+}
+
+toggleBtn.onclick = ()=>{
+  body.classList.toggle('light');
+  const isLight = body.classList.contains('light');
+  toggleBtn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+};
 </script>
 </body>
 </html>
